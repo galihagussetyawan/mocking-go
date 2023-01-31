@@ -45,3 +45,30 @@ func TestGetAllUsers(t *testing.T) {
 
 	assert.Equal(t, http.StatusOK, response.StatusCode)
 }
+
+func TestGetUserById(t *testing.T) {
+
+	t.Run("test_with_id_1", func(t *testing.T) {
+		r := httptest.NewRequest(http.MethodGet, fmt.Sprintf("/user?id=%v", 1), nil)
+		w := httptest.NewRecorder()
+		GetUserById(w, r)
+
+		res := w.Result()
+		defer res.Body.Close()
+
+		assert.Equal(t, r.URL.Query().Get("id"), "1")
+		assert.Equal(t, res.StatusCode, http.StatusOK)
+	})
+
+	t.Run("test_with_id_nill", func(t *testing.T) {
+		r := httptest.NewRequest(http.MethodGet, "/user", nil)
+		w := httptest.NewRecorder()
+		GetUserById(w, r)
+
+		res := w.Result()
+		defer res.Body.Close()
+
+		assert.Equal(t, res.StatusCode, http.StatusBadRequest)
+	})
+
+}
