@@ -2,6 +2,7 @@ package mockinggo
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -31,4 +32,16 @@ func TestGetUser(t *testing.T) {
 	assert.Equal(t, http.StatusOK, response.StatusCode)
 	assert.Equal(t, "galih agus setyawan", j.Name)
 	assert.Equal(t, "trenggalek", j.Address)
+}
+
+func TestGetAllUsers(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(GetAllUsers))
+	response, err := http.Get(server.URL)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+	defer response.Body.Close()
+
+	assert.Equal(t, http.StatusOK, response.StatusCode)
 }
